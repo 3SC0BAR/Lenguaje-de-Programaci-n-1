@@ -1,0 +1,71 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string generarRFC(const string& apellidoPaterno, const string& apellidoMaterno, const string& primerNombre, int year, int mes, int dia) {
+    ////// Primeros 2 caracteres
+    string primeros2 = apellidoPaterno.substr(0, 1);
+    size_t vocalPos = apellidoPaterno.find_first_of("AEIOU");
+    if (vocalPos != string::npos) {
+        primeros2 += apellidoPaterno[vocalPos];
+    } else {
+        // Si no hay vocal interna, agregar una X
+        primeros2 += "X";
+    }
+
+    // 3ra posición
+    string tercera = (apellidoMaterno.empty()) ? "X" : apellidoMaterno.substr(0, 1);
+
+    // 4a posición
+    string cuarta = (primerNombre.empty()) ? "X" : primerNombre.substr(0, 1);
+
+    // 5a y 6a posición (dos últimos dígitos del año)
+    string quintaYsexta = to_string(year).substr(2, 2);
+
+    // 7a y 8a posición (mes)
+    string septimaYoctava = (mes < 10) ? "0" + to_string(mes) : to_string(mes);
+
+    // 9a y 10a posición (día)
+    string novenaYdecima = (dia < 10) ? "0" + to_string(dia) : to_string(dia);
+
+    // Homoclave (11a, 12a y 13 posición)
+    string homoclave = "XXX";
+
+    // Concatenar y devolver el RFC
+    return primeros2 + tercera + cuarta + quintaYsexta + septimaYoctava + novenaYdecima + homoclave;
+}
+
+int main() {
+    // Datos
+    string apellidoPaterno, apellidoMaterno, primerNombre;
+    int year, mes, dia;
+
+    // Ingresar datos del usuario
+    cout << "Ingrese el apellido paterno: ";
+    cin >> apellidoPaterno;
+    
+    cout << "Ingrese el apellido materno (si no tiene, presione enter): ";
+    cin.ignore();  // Limpiar buffer antes de getline
+    getline(cin, apellidoMaterno);
+
+    cout << "Ingrese el primer nombre: ";
+    cin >> primerNombre;
+
+    cout << "Ingrese el año de nacimiento (4 dígitos): ";
+    cin >> year;
+
+    cout << "Ingrese el mes de nacimiento (2 dígitos): ";
+    cin >> mes;
+
+    cout << "Ingrese el día de nacimiento (2 dígitos): ";
+    cin >> dia;
+
+    // Generar RFC
+    string rfc = generarRFC(apellidoPaterno, apellidoMaterno, primerNombre, year, mes, dia);
+
+    // Mostrar RFC
+    cout <<"\nRFC GENERADO: " << rfc << endl;
+
+    return 0;
+}
